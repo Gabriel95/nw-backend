@@ -18,6 +18,8 @@ using nw_api.Data.Interfaces;
 using nw_api.Data.Repository;
 using nw_api.Interfaces;
 using nw_api.Services;
+using AutoMapper;
+using nw_api.Data.Entities;
 
 namespace nw_api
 {
@@ -35,7 +37,15 @@ namespace nw_api
         {
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<INetWorthService, NetWorthService>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ICashRepository, CashRepository>();
+            services.AddTransient<IInvestedAssetsRepository, InvestedAssetsRepository>();
+            services.AddTransient<ILiabilitiesRepository, LiabilitiesRepository>();
+            services.AddTransient<IUseAssetsRepository, UseAssetsRepository>();
+            services.AddTransient<INetWorthRepository, NetWorthRepository>();
+            
+            services.AddAutoMapper(typeof(Startup));
             services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
                 {
                     builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().Build();
