@@ -79,5 +79,25 @@ namespace nw_api.Controllers
                 return Problem(e.Message);
             }
         }
+        
+        [Authorize]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteNetWorth(Guid id)
+        {
+            try
+            {
+                var authenticateInfo = await HttpContext.GetTokenAsync("access_token");
+                var userId = _authService.GetUserIdFromToken(authenticateInfo);
+                if (userId.Equals(Guid.Empty))
+                    return Unauthorized();
+
+                var netWorth = _netWorthService.DeleteNetWorth(userId, id);
+                return Ok(netWorth);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
+        }
     }
 }

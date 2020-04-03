@@ -11,5 +11,6 @@ namespace nw_api.Interfaces
         public void AddNetWorth(NetWorthModel netWorthModel);
         public CurrentNetWorthModel GetCurrentNetWorth(Guid userId);
         public IEnumerable<NetWorth> GetAllNetWorths(Guid userId);
+        public NetWorth DeleteNetWorth(Guid userId, Guid netWorthId);
     }
 }

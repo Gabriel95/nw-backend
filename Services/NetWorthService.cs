@@ -79,5 +79,10 @@ namespace nw_api.Services
         {
             return _netWorthRepository.GetAllNetWorths(userId);
         }
+
+        public NetWorth DeleteNetWorth(Guid userId, Guid netWorthId)
+        {
+            return _netWorthRepository.DeleteNetWorth(userId, netWorthId);
+        }
     }
 }
