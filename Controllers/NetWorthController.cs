@@ -40,5 +40,24 @@ namespace nw_api.Controllers
                 return Problem(e.Message);
             }
         }
+
+        [Authorize]
+        [HttpGet("currentnetworth")]
+        public async Task<IActionResult> GetCurrentNetWorthCalculation()
+        {
+            try
+            {
+                var authenticateInfo = await HttpContext.GetTokenAsync("access_token");
+                var userId = _authService.GetUserIdFromToken(authenticateInfo);
+                if (userId.Equals(Guid.Empty))
+                    return Unauthorized();
+                var netWorthModel = _netWorthService.GetCurrentNetWorth(userId);
+                return Ok(netWorthModel);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
+        }
     }
 }

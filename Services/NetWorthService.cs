@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using nw_api.Data.Entities;
 using nw_api.Data.Interfaces;
@@ -51,6 +54,25 @@ namespace nw_api.Services
             _investedAssetsRepository.InsertInvestedAssets(investedAssets, netWorth.Id);
             _useAssetsRepository.InsertUseAssets(useAssets, netWorth.Id);
             _liabilitiesRepository.InsertLiabilities(liabilities, netWorth.Id);
+        }
+
+        public CurrentNetWorthModel GetCurrentNetWorth(Guid userId)
+        {
+            var top2NetWorth = _netWorthRepository.GetNetWorths(userId, amount: 2).ToArray();
+            var model = new CurrentNetWorthModel{CurrentNetWorthDate = null, PreviousNetWorthDate = null};
+            if (top2NetWorth.Length <= 0)
+                return model;
+            var currentNetWorth = top2NetWorth[0];
+            model.CurrentNetWorthDate = currentNetWorth.DateTimeCreated.ToString("dd/MM/yyyy");
+            model.CurrentNetWorth = currentNetWorth.Total;
+
+            if (top2NetWorth.Length <= 1 || top2NetWorth[1].Total == 0)
+                return model;
+
+            var previousNetWorth = top2NetWorth[1];
+            model.PreviousNetWorthDate = previousNetWorth.DateTimeCreated.ToString("dd/MM/yyyy");
+            model.Increase = ((currentNetWorth.Total - previousNetWorth.Total) / previousNetWorth.Total) * 100;
+            return model;
         }
     }
 }
