@@ -12,6 +12,10 @@ namespace nw_api
             CreateMap<NetWorthModel, InvestedAssets>();
             CreateMap<NetWorthModel, Liabilities>();
             CreateMap<NetWorthModel, UseAssets>();
+            CreateMap<Cash, CashDetailModel>();
+            CreateMap<InvestedAssets, InvestedAssetsDetailModel>();
+            CreateMap<Liabilities, LiabilitiesDetailModel>();
+            CreateMap<UseAssets, UseAssetsDetailModel>();
         }
     }
 }

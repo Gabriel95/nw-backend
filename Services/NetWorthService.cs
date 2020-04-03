@@ -84,5 +84,44 @@ namespace nw_api.Services
         {
             return _netWorthRepository.DeleteNetWorth(userId, netWorthId);
         }
+
+        public NetWorthDetailModel GetNetWorthById(Guid userId, Guid netWorthId)
+        {
+            var netWorthDetailModel = new NetWorthDetailModel();
+            try
+            {
+                var netWorth = _netWorthRepository.GetNetWorth(userId, netWorthId);
+                var cash = _cashRepository.GetCash(netWorth.Id);
+                var investedAssets = _investedAssetsRepository.GetInvestedAssets(netWorth.Id);
+                var useAssets = _useAssetsRepository.GetUseAssets(netWorth.Id);
+                var liabilities = _liabilitiesRepository.GetLiabilities(netWorth.Id);
+
+                var cashDetailModel = new CashDetailModel();
+                var investedAssetsDetailModel = new InvestedAssetsDetailModel();
+                var useAssetsDetailModel = new UseAssetsDetailModel();
+                var liabilitiesDetailModel = new LiabilitiesDetailModel();
+
+                _mapper.Map(cash, cashDetailModel);
+                _mapper.Map(investedAssets, investedAssetsDetailModel);
+                _mapper.Map(useAssets, useAssetsDetailModel);
+                _mapper.Map(liabilities, liabilitiesDetailModel);
+                
+                netWorthDetailModel.Total = netWorth.Total;
+                netWorthDetailModel.CashTotal = cash.GetTotal();
+                netWorthDetailModel.Cash = cashDetailModel;
+                netWorthDetailModel.InvestedAssetsTotal = investedAssets.GetTotal();
+                netWorthDetailModel.InvestedAssets = investedAssetsDetailModel;
+                netWorthDetailModel.UseAssetsTotal = useAssets.GetTotal();
+                netWorthDetailModel.UseAssets = useAssetsDetailModel;
+                netWorthDetailModel.LiabilitiesTotal = liabilities.GetTotal();
+                netWorthDetailModel.Liabilities = liabilitiesDetailModel;
+                
+                return netWorthDetailModel;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
     }
 }

@@ -41,5 +41,39 @@ namespace nw_api.Data.Repository
             cmd.Parameters.AddWithValue("networthid", netWorthId);
             cmd.ExecuteNonQuery();
         }
+
+        public InvestedAssets GetInvestedAssets(Guid netWorthId)
+        {
+            const string selectCommand =
+                "SELECT id, brokerage, ira, rothira, k401, sepira, keogh, pension, annuity, realestate, soleproprietorship, partnership, ccorporation, scorporation, limitedliabilitycompany" + 
+                " FROM investedassets WHERE networthid = @networthid";
+            using var conn = new NpgsqlConnection(_config["ConnectionString"]);
+            conn.Open();
+            using var cmd = new NpgsqlCommand(selectCommand, conn);
+            cmd.Parameters.AddWithValue("networthid", netWorthId);
+            using var reader = cmd.ExecuteReader();
+            if (!reader.HasRows)
+                return null;
+            reader.Read();
+            var investedAssets = new InvestedAssets
+            {
+                Id = reader.GetGuid(0),
+                Brokerage = reader.GetDecimal(1),
+                Ira = reader.GetDecimal(2),
+                RothIra = reader.GetDecimal(3),
+                K401 = reader.GetDecimal(4),
+                SepIra = reader.GetDecimal(5),
+                Keogh = reader.GetDecimal(6),
+                Pension = reader.GetDecimal(7),
+                Annuity = reader.GetDecimal(8),
+                RealEstate = reader.GetDecimal(9),
+                SoleProprietorship = reader.GetDecimal(10),
+                Partnership = reader.GetDecimal(11),
+                CCorporation = reader.GetDecimal(12),
+                SCorporation = reader.GetDecimal(13),
+                LimitedLiabilityCompany = reader.GetDecimal(14)
+            };
+            return investedAssets;
+        }
     }
 }

@@ -99,5 +99,29 @@ namespace nw_api.Controllers
                 return Problem(e.Message);
             }
         }
+
+        [Authorize]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetDetailedNetWorth(Guid id)
+        {
+            try
+            {
+                var authenticateInfo = await HttpContext.GetTokenAsync("access_token");
+                var userId = _authService.GetUserIdFromToken(authenticateInfo);
+                if (userId.Equals(Guid.Empty))
+                    return Unauthorized();
+                
+                NetWorthDetailModel netWorth = _netWorthService.GetNetWorthById(userId, id);
+
+                if (netWorth == null)
+                    return NotFound("Net worth not found");
+                
+                return Ok(netWorth);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
+        }
     }
 }

@@ -32,5 +32,31 @@ namespace nw_api.Data.Repository
             cmd.Parameters.AddWithValue("networthid", netWorthId);
             cmd.ExecuteNonQuery();
         }
+
+        public UseAssets GetUseAssets(Guid netWorthId)
+        {
+            const string selectCommand =
+                "SELECT id, principalhome, vacationhome, carstrucksboats, homefurnishing, artsantiquescoinscollectibles, jewelryfurs" + 
+                " FROM useassets WHERE networthid = @networthid";
+            using var conn = new NpgsqlConnection(_config["ConnectionString"]);
+            conn.Open();
+            using var cmd = new NpgsqlCommand(selectCommand, conn);
+            cmd.Parameters.AddWithValue("networthid", netWorthId);
+            using var reader = cmd.ExecuteReader();
+            if (!reader.HasRows)
+                return null;
+            reader.Read();
+            var useAssets = new UseAssets
+            {
+                Id = reader.GetGuid(0),
+                PrincipalHome = reader.GetDecimal(1),
+                VacationHome = reader.GetDecimal(2),
+                CarsTrucksBoats = reader.GetDecimal(3),
+                HomeFurnishings = reader.GetDecimal(4),
+                ArtAntiquesCoinsCollectibles = reader.GetDecimal(5),
+                JewelryFurs = reader.GetDecimal(6)
+            };
+            return useAssets;
+        }
     }
 }

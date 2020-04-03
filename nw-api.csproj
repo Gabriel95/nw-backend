@@ -16,6 +16,7 @@
 
     <ItemGroup>
       <Compile Remove="Models\NetWorthShowModel.cs" />
+      <Compile Remove="Controllers\SignUpController.cs" />
     </ItemGroup>
 
 
