@@ -74,5 +74,10 @@ namespace nw_api.Services
             model.Increase = ((currentNetWorth.Total - previousNetWorth.Total) / previousNetWorth.Total) * 100;
             return model;
         }
+
+        public IEnumerable<NetWorth> GetAllNetWorths(Guid userId)
+        {
+            return _netWorthRepository.GetAllNetWorths(userId);
+        }
     }
 }

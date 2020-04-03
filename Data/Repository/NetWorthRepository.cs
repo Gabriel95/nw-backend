@@ -54,5 +54,29 @@ namespace nw_api.Data.Repository
             }
             return listToReturn;
         }
+
+        public IEnumerable<NetWorth> GetAllNetWorths(Guid userId)
+        {
+            using var conn = new NpgsqlConnection(_config["ConnectionString"]);
+            conn.Open();
+            const string selectCommand = "SELECT id, userid, datecreated, total FROM networthreport " + 
+                                         "WHERE userid = @userid ORDER BY datecreated desc";
+            var listToReturn = new List<NetWorth>();
+            using var cmd = new NpgsqlCommand(selectCommand, conn);
+            cmd.Parameters.AddWithValue("userid", userId);
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                var networth = new NetWorth
+                {
+                    Id = reader.GetGuid(0),
+                    UserId = reader.GetGuid(1),
+                    DateTimeCreated = reader.GetDateTime(2),
+                    Total = reader.GetDecimal(3)
+                };
+                listToReturn.Add(networth);
+            }
+            return listToReturn;
+        }
     }
 }

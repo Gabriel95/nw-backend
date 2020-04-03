@@ -59,5 +59,25 @@ namespace nw_api.Controllers
                 return Problem(e.Message);
             }
         }
+
+        [Authorize]
+        [HttpGet("getallnetworths")]
+        public async Task<IActionResult> GetAllNetWorths()
+        {
+            try
+            {
+                var authenticateInfo = await HttpContext.GetTokenAsync("access_token");
+                var userId = _authService.GetUserIdFromToken(authenticateInfo);
+                if (userId.Equals(Guid.Empty))
+                    return Unauthorized();
+
+                var netWorths = _netWorthService.GetAllNetWorths(userId);
+                return Ok(netWorths);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
+        }
     }
 }

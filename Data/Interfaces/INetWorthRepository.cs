@@ -10,5 +10,6 @@ namespace nw_api.Data.Interfaces
     {
         public void InsertNetWorth(NetWorth netWorth);
         public IEnumerable<NetWorth> GetNetWorths(Guid userId, int amount);
+        public IEnumerable<NetWorth> GetAllNetWorths(Guid userId);
     }
 }
