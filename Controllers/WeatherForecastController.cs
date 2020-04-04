@@ -8,8 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace nw_api.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -24,7 +23,6 @@ namespace nw_api.Controllers
             _logger = logger;
         }
         
-        [Authorize]
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {

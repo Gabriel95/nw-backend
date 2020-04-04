@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using nw_api.Data.Entities;
 using nw_api.Interfaces;
 
@@ -42,6 +43,22 @@ namespace nw_api.Services
             
             var encodedToken = new JwtSecurityTokenHandler().WriteToken(token);
             return encodedToken;
+        }
+
+        public Guid GetUserIdFromToken(string token)
+        {
+            try
+            {
+                var securityTokenHandler = new JwtSecurityTokenHandler();
+                if(!securityTokenHandler.CanReadToken(token)) return Guid.Empty;
+                var decryptedToken = securityTokenHandler.ReadJwtToken(token);
+                var claims = decryptedToken.Claims;
+                return Guid.Parse(claims.ElementAt(2).Value);
+            }
+            catch
+            {
+                return Guid.Empty;
+            }
         }
     }
 }
